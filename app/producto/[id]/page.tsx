@@ -1,7 +1,7 @@
-import { notFound } from "next/navigation";
-import { getProductById } from "@/lib/api";
-import Stars from "@/components/Stars";
 import Link from "next/link";
+import { notFound } from "next/navigation";
+import Stars from "@/components/Stars";
+import { getProductById } from "@/lib/api";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -9,10 +9,9 @@ export const dynamic = "force-dynamic";
 export default async function ProductDetailPage({
   params,
 }: {
-  params: Promise<{ id: string }>;
+  params: { id: string };
 }) {
-  const { id } = await params;
-  const product = await getProductById(id);
+  const product = await getProductById(params.id);
 
   if (!product) notFound();
 
@@ -32,7 +31,6 @@ export default async function ProductDetailPage({
         </div>
 
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
-          {/* Image */}
           <div className="card p-6 soft-ring">
             <div className="flex items-center justify-center rounded-2xl bg-white p-6">
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -43,21 +41,31 @@ export default async function ProductDetailPage({
               />
             </div>
 
-            {/* Small highlight row */}
             <div className="mt-5 grid grid-cols-3 gap-3 text-center text-xs text-muted">
-              <div className="rounded-xl border bg-white p-3" style={{ borderColor: "rgb(var(--border))" }}>
+              <div
+                className="rounded-xl border bg-white p-3"
+                style={{ borderColor: "rgb(var(--border))" }}
+              >
                 <div className="font-extrabold" style={{ color: "rgb(var(--brand))" }}>
                   ${product.price.toFixed(2)}
                 </div>
                 <div>Precio</div>
               </div>
-              <div className="rounded-xl border bg-white p-3" style={{ borderColor: "rgb(var(--border))" }}>
+
+              <div
+                className="rounded-xl border bg-white p-3"
+                style={{ borderColor: "rgb(var(--border))" }}
+              >
                 <div className="font-extrabold" style={{ color: "rgb(var(--brand))" }}>
                   {(product.rating?.rate ?? 0).toFixed(1)}
                 </div>
                 <div>Rating</div>
               </div>
-              <div className="rounded-xl border bg-white p-3" style={{ borderColor: "rgb(var(--border))" }}>
+
+              <div
+                className="rounded-xl border bg-white p-3"
+                style={{ borderColor: "rgb(var(--border))" }}
+              >
                 <div className="font-extrabold" style={{ color: "rgb(var(--brand))" }}>
                   {product.rating?.count ?? 0}
                 </div>
@@ -66,9 +74,11 @@ export default async function ProductDetailPage({
             </div>
           </div>
 
-          {/* Content */}
           <div className="space-y-5">
-            <h1 className="text-2xl font-extrabold sm:text-3xl" style={{ color: "rgb(var(--brand))" }}>
+            <h1
+              className="text-2xl font-extrabold sm:text-3xl"
+              style={{ color: "rgb(var(--brand))" }}
+            >
               {product.title}
             </h1>
 
@@ -86,28 +96,12 @@ export default async function ProductDetailPage({
                   </div>
                 </div>
 
-                {/* Demo button (no e-commerce real) */}
-                <button className="btn btn-primary">
-                  Agregar (demo)
-                </button>
+                <button className="btn btn-primary">Agregar (demo)</button>
               </div>
 
               <div className="mt-5 h-px" style={{ backgroundColor: "rgb(var(--border))" }} />
 
-              <p className="mt-5 text-sm leading-7 text-zinc-700">
-                {product.description}
-              </p>
-            </div>
-
-            {/* Extra: little “tips” card */}
-            <div className="card p-5">
-              <div className="text-sm font-extrabold" style={{ color: "rgb(var(--brand))" }}>
-                Tip rápido
-              </div>
-              <p className="mt-2 text-sm text-muted">
-                Usá el filtro por categoría y la búsqueda para encontrar productos más rápido.
-                En una app real, acá podrías mostrar disponibilidad, envío y variantes.
-              </p>
+              <p className="mt-5 text-sm leading-7 text-zinc-700">{product.description}</p>
             </div>
           </div>
         </div>
