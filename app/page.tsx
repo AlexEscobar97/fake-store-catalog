@@ -1,8 +1,13 @@
 import CatalogClient from "./components/CatalogClient";
 import { getCategories, getProducts } from "./lib/api";
 
+export const dynamic = "force-dynamic";
+
 export default async function HomePage() {
-  const [products, categories] = await Promise.all([getProducts(), getCategories()]);
+  const [products, categories] = await Promise.all([
+    getProducts().catch(() => []),
+    getCategories().catch(() => []),
+  ]);
 
   return (
     <main className="bg-app min-h-screen">
@@ -24,11 +29,19 @@ export default async function HomePage() {
             Búsqueda + filtro por categoría, cards responsivas y detalle del producto.
           </p>
 
-          <div className="mt-5 h-1 w-32 rounded-full"
-               style={{ background: "linear-gradient(90deg, rgb(var(--accent)), rgb(var(--brand)))" }} />
+          <div
+            className="mt-5 h-1 w-32 rounded-full"
+            style={{
+              background:
+                "linear-gradient(90deg, rgb(var(--accent)), rgb(var(--brand)))",
+            }}
+          />
         </header>
 
-        <CatalogClient products={products} categories={categories} />
+        <CatalogClient
+          products={products}
+          categories={categories}
+        />
       </div>
     </main>
   );
