@@ -38,20 +38,21 @@ export async function getCategories(): Promise<string[]> {
   }
 }
 
-export async function getProductById(id: string): Promise<Product | null> {
+export async function getProductById(id: string) {
   try {
     const res = await fetch(`${BASE_URL}/products/${id}`, {
       cache: "no-store",
     });
 
-    if (!res.ok) {
-      console.error("FakeStore getProductById failed:", res.status, res.statusText);
-      return null;
-    }
+    if (!res.ok) return null;
 
-    return await res.json();
-  } catch (error) {
-    console.error("Error obteniendo producto (exception):", error);
+    const text = await res.text();
+    if (!text) return null;
+
+    return JSON.parse(text);
+  } catch (e) {
+    console.error("Error obteniendo producto (exception):", e);
     return null;
   }
 }
+
