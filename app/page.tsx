@@ -1,6 +1,7 @@
 import CatalogClient from "./components/CatalogClient";
 import { getCategories, getProducts } from "./lib/api";
 
+export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
@@ -18,7 +19,7 @@ export default async function HomePage() {
               className="inline-block h-2 w-2 rounded-full"
               style={{ backgroundColor: "rgb(var(--accent))" }}
             />
-            Fake Store • Next.js • TS • Tailwind
+            JOSUE ALEXANDER • VASQUEZ ESCOBAR
           </div>
 
           <h1 className="section-title" style={{ color: "rgb(var(--brand))" }}>
@@ -38,10 +39,7 @@ export default async function HomePage() {
           />
         </header>
 
-        <CatalogClient
-          products={products}
-          categories={categories}
-        />
+        <CatalogClient products={products} categories={categories} />
       </div>
     </main>
   );

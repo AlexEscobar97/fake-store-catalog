@@ -3,6 +3,9 @@ import { getProductById } from "@/lib/api";
 import Stars from "@/components/Stars";
 import Link from "next/link";
 
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+
 export default async function ProductDetailPage({
   params,
 }: {
