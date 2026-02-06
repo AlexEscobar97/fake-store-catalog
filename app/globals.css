@@ -1,0 +1,98 @@
+@import "tailwindcss";
+@tailwind utilities;
+
+/* =========================
+   Brand Theme
+   ========================= */
+:root {
+  --bg: 248 247 245;            /* warm off-white */
+  --surface: 255 255 255;       /* cards */
+  --text: 24 24 27;             /* zinc-900 */
+  --muted: 82 82 91;            /* zinc-600 */
+  --border: 228 228 231;        /* zinc-200 */
+
+  --brand: 92 47 22;            /* brown */
+  --accent: 245 120 32;         /* orange */
+  --accent-2: 255 171 64;       /* soft amber */
+}
+
+/* Base */
+html,
+body {
+  height: 100%;
+}
+
+body {
+  color: rgb(var(--text));
+  background:
+    radial-gradient(900px 500px at 10% 0%, rgba(var(--accent), 0.12), transparent 60%),
+    radial-gradient(800px 500px at 90% 10%, rgba(var(--brand), 0.10), transparent 55%),
+    rgb(var(--bg));
+}
+
+/* Utilities to reuse everywhere */
+@layer utilities {
+  .bg-app {
+    background:
+      radial-gradient(900px 500px at 10% 0%, rgba(var(--accent), 0.12), transparent 60%),
+      radial-gradient(800px 500px at 90% 10%, rgba(var(--brand), 0.10), transparent 55%),
+      rgb(var(--bg));
+  }
+
+  .card {
+    @apply rounded-2xl border bg-white shadow-sm;
+    border-color: rgb(var(--border));
+    background-color: rgb(var(--surface));
+  }
+
+  .soft-ring {
+    @apply ring-1;
+    --tw-ring-color: rgba(var(--accent), 0.25);
+  }
+
+  .text-muted {
+    color: rgb(var(--muted));
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold transition;
+  }
+
+  .btn-primary {
+    background: rgb(var(--accent));
+    color: white;
+  }
+  .btn-primary:hover {
+    filter: brightness(0.95);
+  }
+
+  .btn-ghost {
+    @apply border bg-white hover:bg-zinc-50;
+    border-color: rgb(var(--border));
+  }
+
+  .input {
+    @apply w-full rounded-xl border bg-white px-4 py-2 text-sm outline-none transition;
+    border-color: rgb(var(--border));
+  }
+  .input:focus {
+    box-shadow: 0 0 0 4px rgba(var(--accent), 0.18);
+    border-color: rgba(var(--accent), 0.55);
+  }
+
+  .chip {
+    @apply inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold;
+    background: rgba(var(--accent), 0.12);
+    color: rgb(var(--brand));
+    border: 1px solid rgba(var(--accent), 0.18);
+  }
+
+  .section-title {
+    @apply text-2xl font-extrabold sm:text-3xl;
+  }
+}
+
+/* Optional: nicer selection */
+::selection {
+  background: rgba(var(--accent), 0.22);
+}
