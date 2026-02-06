@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Product } from "../lib/types";
+import type { Product } from "@/lib/types";
 
 export default function ProductCard({ product }: { product: Product }) {
   return (

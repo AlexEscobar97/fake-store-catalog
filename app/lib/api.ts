@@ -1,74 +1,53 @@
-import { Product } from "./types";
+// app/lib/api.ts
+import type { Product } from "./types";
 
 const API_BASE = "https://fakestoreapi.com";
 
-async function fetchJson<T>(url: string, timeoutMs = 10000): Promise<T> {
+async function fetchJsonSafe<T>(url: string, timeoutMs = 12000): Promise<T | null> {
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), timeoutMs);
+  const t = setTimeout(() => controller.abort(), timeoutMs);
 
   try {
     const res = await fetch(url, {
       cache: "no-store",
-      next: { revalidate: 0 },
-      headers: { accept: "application/json" },
+      headers: {
+        Accept: "application/json",
+      },
       signal: controller.signal,
     });
 
+    // Si FakeStore responde 429/500/404 etc
+    if (!res.ok) return null;
+
+    const contentType = res.headers.get("content-type") || "";
     const text = await res.text();
 
-    if (!res.ok) {
-      if (res.status === 404) {
-        throw new Error("NOT_FOUND");
-      }
+    if (!text.trim()) return null;
 
-      throw new Error(
-        `HTTP_${res.status}: ${text ? text.slice(0, 200) : "RESPUESTA_VACIA"}`
-      );
-    }
-
-    if (!text) {
-      throw new Error("RESPUESTA_VACIA");
-    }
+    if (!contentType.includes("application/json")) return null;
 
     try {
       return JSON.parse(text) as T;
     } catch {
-      throw new Error("JSON_INVALIDO");
+      return null;
     }
+  } catch {
+    return null;
   } finally {
-    clearTimeout(timeout);
+    clearTimeout(t);
   }
 }
 
 export async function getProducts(): Promise<Product[]> {
-  try {
-    return await fetchJson<Product[]>(`${API_BASE}/products`);
-  } catch (e) {
-    console.error("[getProducts] Error:", e);
-    return [];
-  }
+  const data = await fetchJsonSafe<Product[]>(`${API_BASE}/products`);
+  return data ?? [];
 }
 
 export async function getCategories(): Promise<string[]> {
-  try {
-    return await fetchJson<string[]>(`${API_BASE}/products/categories`);
-  } catch (e) {
-    console.error("[getCategories] Error:", e);
-    return [];
-  }
+  const data = await fetchJsonSafe<string[]>(`${API_BASE}/products/categories`);
+  return data ?? [];
 }
 
-/**
- * Devuelve:
- * - Product si existe
- * - null si NO existe (404 real)
- * - throws si es error de red/parse (para mostrar pantalla de error, no 404)
- */
-export async function getProductByIdStrict(id: string): Promise<Product | null> {
-  try {
-    return await fetchJson<Product>(`${API_BASE}/products/${encodeURIComponent(id)}`);
-  } catch (e: any) {
-    if (e?.message === "NOT_FOUND") return null;
-    throw e; // error real (red / vacío / json inválido)
-  }
+export async function getProductById(id: string): Promise<Product | null> {
+  return await fetchJsonSafe<Product>(`${API_BASE}/products/${id}`);
 }
